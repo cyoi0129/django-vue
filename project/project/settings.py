@@ -26,7 +26,7 @@ SECRET_KEY = '8y-@lwmm$vf(o-btiod^o*)4er&=f!*hjjq-4s@s7vl7)o1rjj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -58,7 +58,6 @@ ROOT_URLCONF = 'project.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        # 'DIRS': [os.path.join(BASE_DIR, 'templates'),],
         'DIRS': [os.path.join(BASE_DIR, 'app/dist'),],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -87,6 +86,8 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.AllowAny',],
+    'DEFAULT_PARSER_CLASSES': ['rest_framework.parsers.JSONParser',],
 }
 
 # Password validation
@@ -107,6 +108,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://127.0.0.1:8000'
+]
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
@@ -124,14 +130,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
-# STATIC_URL = '/static/'
-
-# STATICFILES_DIRS = (
-#     [
-#         os.path.join(BASE_DIR, "static"),
-#     ]
-# )
 
 STATIC_URL = '/app/dist/'
 

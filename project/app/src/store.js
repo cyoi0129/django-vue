@@ -19,13 +19,13 @@ export default new Vuex.Store({
       state.list = payload;
     },
     mutateItem(state, item){
-      if (item.status) {
+      if (item.data.status) {
         state.list[item.id].status = 'done'
       } else {
         state.list[item.id].status = 'tbd'
       }
-      state.list[item.id].comment = item.comment
-      state.list[item.id].score = item.score
+      state.list[item.id].comment = item.data.comment
+      state.list[item.id].score = item.data.score
     },
    },
    actions: {
@@ -42,9 +42,9 @@ export default new Vuex.Store({
    commitList(store, account) {
     // API for test usage
     // const url = 'https://jsondata.okiba.me/v1/json/yvN4L201208041033'
+    // console.log(account)
     // Use the following to switch to PROD
     const url = '/api/entries/?format=json&reporter=' + account
-    console.log(account)
     return axios.get(url)
      .then(response => {
       store.commit('mutateList', response.data)
@@ -53,14 +53,25 @@ export default new Vuex.Store({
    commitItem(store, item){
       store.commit('mutateItem', item)
       let status = 'tbd'
-      if (item.status) {
+      if (item.data.status) {
         status = 'done'
       } else {
         status = 'tbd'
       }
-      axios.put('/api/entries/' + item.id + '/', { status: status, comment: item.comment, score: item.score })
-      .then(console.log('scuessed!'))
-      .catch((error) =>{ console.log(error) })
+      let url = '/api/entries/' + String(Number(item.id) + 1) + '/'
+      let data = item.data
+      data.status = status
+      data.comment = item.data.comment
+      data.score = item.data.score
+      console.log(data)
+      axios({
+        method: 'put',
+        url: url,
+        data: data,
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(console.log('scuessed!')).catch((error) =>{ console.log(error) })
    }
   },
    getters: {
